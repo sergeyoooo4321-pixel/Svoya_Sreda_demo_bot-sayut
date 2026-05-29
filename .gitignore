@@ -1,0 +1,11 @@
+.next
+node_modules
+.env
+.env.local
+.lead-logs
+dev-server*.log
+tsconfig.tsbuildinfo
+dist
+out
+npm-debug.log*
+TZ_Svoya_Sreda_Website.md
