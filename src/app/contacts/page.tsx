@@ -7,7 +7,7 @@ import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Контакты и заявка",
-  description: "Контакты мебельного магазина «Своя Среда» и форма заявки для передачи в Bitrix24."
+  description: "Контакты мебельного магазина «Своя Среда» и форма заявки через Telegram."
 };
 
 export default function ContactsPage() {

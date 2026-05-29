@@ -1,6 +1,6 @@
 # Своя Среда — сайт мебельного магазина
 
-Многостраничный Next.js-проект по ТЗ: главная витрина, каталог из 10 товаров, карточки товаров, страницы условий, контактов, FAQ, privacy, 404, Telegram CTA и подготовленная интеграция с Bitrix24.
+Многостраничный Next.js-проект по ТЗ: главная витрина, каталог из 10 товаров, карточки товаров, страницы условий, контактов, FAQ, privacy, 404 и Telegram CTA.
 
 ## Запуск
 
@@ -9,11 +9,10 @@ npm install
 npm run dev
 ```
 
-Production:
+Production static export:
 
 ```bash
 npm run build
-npm run start
 ```
 
 ## Переменные окружения
@@ -21,9 +20,8 @@ npm run start
 Скопируйте `.env.example` в `.env.local` и заполните реальные значения:
 
 ```env
-NEXT_PUBLIC_SITE_URL=https://svoya-sreda.demo
+NEXT_PUBLIC_SITE_URL=https://svoyasredademo.ru
 NEXT_PUBLIC_TELEGRAM_BOT_URL=https://t.me/Svoya_Sreda_demo_bot
-BITRIX24_WEBHOOK_URL=
 ```
 
 ## Реализованные страницы
@@ -69,17 +67,15 @@ public/images/catalog/<article>_<slug>/*.jpeg
 https://t.me/Svoya_Sreda_demo_bot?start=product_SS-DV-210
 ```
 
-## Bitrix24
+## GitHub Pages
 
-Форма отправляет POST на `/api/lead`. API валидирует данные и создаёт лид через `BITRIX24_WEBHOOK_URL`.
+Проект настроен как статический сайт для GitHub Pages:
 
-Если webhook не задан или Bitrix24 недоступен, заявка не теряется: она сохраняется в локальный fallback-журнал:
-
-```txt
-.lead-logs/leads.jsonl
+```bash
+npm run build
 ```
 
-Эта папка добавлена в `.gitignore`.
+Результат сборки создаётся в `out`. Деплой выполняется workflow `.github/workflows/deploy-pages.yml`. Домен закреплён через `public/CNAME`: `svoyasredademo.ru`.
 
 ## Проверка
 
@@ -90,4 +86,4 @@ npm run typecheck
 npm run build
 ```
 
-Ключевые сценарии из ТЗ покрыты интерфейсом: переход с главной в каталог, фильтр по диванам, открытие карточки товара, Telegram deep-link, отправка формы и мобильное меню.
+Ключевые сценарии из ТЗ покрыты интерфейсом: переход с главной в каталог, фильтр по диванам, открытие карточки товара, Telegram deep-link, заявка через Telegram и мобильное меню.

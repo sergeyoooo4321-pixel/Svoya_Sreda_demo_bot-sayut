@@ -4,8 +4,9 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Send } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { leadSchema, type LeadInput } from "@/lib/lead-schema";
 import { Button } from "@/components/ui/Button";
+import { leadSchema, type LeadInput } from "@/lib/lead-schema";
+import { getTelegramUrl } from "@/lib/telegram";
 
 type LeadFormProps = {
   product?: string;
@@ -14,7 +15,8 @@ type LeadFormProps = {
 };
 
 export function LeadForm({ product = "", sourcePage = "", compact = false }: LeadFormProps) {
-  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "success">("idle");
+  const [copied, setCopied] = useState(false);
   const {
     register,
     handleSubmit,
@@ -27,18 +29,31 @@ export function LeadForm({ product = "", sourcePage = "", compact = false }: Lea
 
   async function onSubmit(values: LeadInput) {
     setStatus("idle");
-    const response = await fetch("/api/lead", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values)
-    });
+    setCopied(false);
 
-    if (!response.ok) {
-      setStatus("error");
-      return;
+    const message = [
+      "Заявка с сайта Своя Среда",
+      `Имя: ${values.name}`,
+      `Телефон: ${values.phone}`,
+      values.product ? `Товар: ${values.product}` : "",
+      `Город доставки: ${values.city}`,
+      values.comment ? `Комментарий: ${values.comment}` : "",
+      values.sourcePage ? `Страница: ${values.sourcePage}` : ""
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    let copiedToClipboard = false;
+    try {
+      await navigator.clipboard.writeText(message);
+      copiedToClipboard = true;
+    } catch {
+      copiedToClipboard = false;
     }
 
+    setCopied(copiedToClipboard);
     setStatus("success");
+    window.open(getTelegramUrl(), "_blank", "noopener,noreferrer");
     reset({ name: "", phone: "", product, city: "", comment: "", privacy: false, sourcePage });
   }
 
@@ -83,13 +98,16 @@ export function LeadForm({ product = "", sourcePage = "", compact = false }: Lea
       {errors.privacy ? <span className="form-error">{errors.privacy.message}</span> : null}
 
       <Button type="submit" disabled={isSubmitting} icon={<Send size={18} />}>
-        {isSubmitting ? "Отправляем" : "Оставить заявку"}
+        {isSubmitting ? "Открываем Telegram" : "Оставить заявку"}
       </Button>
 
       {status === "success" ? (
-        <p className="form-status success">Заявка принята. Если Bitrix24 не настроен, она сохранена в локальный fallback-журнал.</p>
+        <p className="form-status success">
+          {copied
+            ? "Telegram открыт. Текст заявки скопирован, вставьте его в чат менеджеру."
+            : "Telegram открыт. Отправьте менеджеру имя, телефон, город и выбранный товар."}
+        </p>
       ) : null}
-      {status === "error" ? <p className="form-status error">Не удалось отправить заявку. Попробуйте ещё раз или напишите в Telegram.</p> : null}
     </form>
   );
 }

@@ -16,7 +16,7 @@ export function Footer() {
               <small>современная мебель для дома</small>
             </span>
           </Link>
-          <p>Подбираем мебель без суеты: каталог, готовые комплекты, консультации в Telegram и аккуратная заявка в CRM.</p>
+          <p>Подбираем мебель без суеты: каталог, готовые комплекты, консультации в Telegram и аккуратная заявка менеджеру.</p>
           <Link href={getTelegramUrl()} target="_blank" rel="noreferrer" className="footer-telegram">
             <Send size={18} />
             Написать в Telegram
@@ -63,7 +63,7 @@ export function Footer() {
       </div>
       <div className="footer-bottom">
         <span>© Своя Среда, демо-проект мебельного магазина</span>
-        <span>Next.js, Telegram CTA, Bitrix24-ready API</span>
+        <span>Next.js, static export, GitHub Pages</span>
       </div>
     </footer>
   );
